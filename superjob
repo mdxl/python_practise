@@ -31,7 +31,7 @@ while True:
         link = vacancy.find('a')
         vacancy_href = main_url + link.get('href')
         vacancy_name = link.getText()
-        salary_data = vacancy.find('span', {'class': 'f-test-button-dalshe'})
+        salary_data = vacancy.find('span', {'class': '_1OuF_ _1qw9T f-test-text-company-item-salary'})
         if salary_data is not None:
             vacancy_salary = salary_data.getText().replace('\xa0','')
             salary_text = ''.join(vacancy_salary.split()[:-1])
@@ -63,10 +63,4 @@ while True:
         response = requests.get(next_link, headers = r_headers)
         soup = bs(response.text, 'html.parser')
         cnt +=1
-        
-    
-    
-    
-    
-    
-pprint(all_vacancies)
+  
