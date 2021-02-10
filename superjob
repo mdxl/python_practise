@@ -34,13 +34,19 @@ while True:
         salary_data = vacancy.find('span', {'class': '_3mfro _2Wp8I PlM3e _2JVkc _2VHxz'})
         if salary_data is not None:
             #Обработка сумм зарплат
-            vacancy_salary = salary_data.getText().replace('\xa0','')
-            salary_text = ''.join(vacancy_salary.split()[:-1])
-            vacancy_data['salary_cur'] = vacancy_salary.split()[-1].replace('.','')
+            vacancy_salary = salary_data.getText()
+            salary_text = ''.join(vacancy_salary.split()[:-1]).replace('.','') # Собираем текст ЗП
+            if salary_text.find('По') > -1:
+                vacancy_data['salary_cur'] = None 
+            elif salary_text.find('') > -1:
+                vacancy_data['salary_cur'] = vacancy_salary.split()[-1].replace('.','') # в конце руб. удаляем точку
             if salary_text.find('-') > -1:
-                vacancy_data['salary_min'] = int(salary_text.split('-')[0])
+                vacancy_data['salary_min'] = int(salary_text.split('-')[1])
                 vacancy_data['salary_max'] = int(salary_text.split('-')[-1])
             elif salary_text.find('от') > -1:
+                vacancy_data['salary_min'] = int(salary_text[2:])
+                vacancy_data['salary_max'] = None
+            elif salary_text.find(' ') > -1:
                 vacancy_data['salary_min'] = int(salary_text[2:])
                 vacancy_data['salary_max'] = None
             elif salary_text.find('до') > -1:
@@ -54,7 +60,7 @@ while True:
         vacancy_data['href'] = vacancy_href
         #vacancy_data['salary'] = vacancy_salary
         all_vacancies.append(vacancy_data)
-    pprint (all_vacancies [cnt*10])
+    pprint (all_vacancies [cnt*1])
     next_button = soup.find('a', {'class': 'f-test-link-Dalshe'})
     
     if next_button is None:
